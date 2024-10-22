@@ -1,6 +1,7 @@
 name: nodeseek鸡腿签到
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main  # 在 main 分支上进行推送时触发 
