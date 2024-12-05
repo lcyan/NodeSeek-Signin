@@ -14,7 +14,7 @@ chat_id = os.environ.get("CHAT_ID", "")
 telegram_api_url = os.environ.get("TELEGRAM_API_URL", "https://api.telegram.org")  # 代理api,可以使用自己的反代
 
 
-def telegram_Bot(token, chat_id, message):
+def telegram_bot(token, chat_id, message):
     url = f'{telegram_api_url}/bot{token}/sendMessage'
     data = {
         'chat_id': chat_id,
@@ -59,26 +59,27 @@ if COOKIE_ENV:
     params = {
         'random': NS_RANDOM
     }
-
+    response = None
     try:
         response = requests.post(url, headers=headers, impersonate="chrome110")
-        response_data = response.json()
-        print(response_data)
+        sign_result_json = response.json()
+        print(sign_result_json)
         print(COOKIE_ENV)
-        message = response_data.get('message')
-        success = response_data.get('success')
+        message = sign_result_json.get('message')
+        success = sign_result_json.get('success')
         if success == "true":
             print(message)
             if telegram_bot_token and chat_id:
-                telegram_Bot(telegram_bot_token, chat_id, message)
+                telegram_bot(telegram_bot_token, chat_id, message)
         else:
             print(message)
             if telegram_bot_token and chat_id:
-                telegram_Bot(telegram_bot_token, chat_id, message)
+                telegram_bot(telegram_bot_token, chat_id, message)
             if pushplus_token:
                 pushplus_ts(pushplus_token, "nodeseek签到", message)
     except Exception as e:
         print("发生异常:", e)
-        print("实际响应内容:", response.text)
+        if response:
+            print("实际响应内容:", response.text)
 else:
     print("请先设置Cookie")
