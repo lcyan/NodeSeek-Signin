@@ -55,7 +55,7 @@ def load_send():
         hadsend = False
 
 
-load_send()
+# load_send()
 
 if COOKIE_ENV:
     url = f"https://www.nodeseek.com/api/attendance?random={NS_RANDOM}"
