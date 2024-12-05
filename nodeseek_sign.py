@@ -3,7 +3,7 @@ import os
 import sys
 from curl_cffi import requests
 
-NS_RANDOM = os.environ.get("NS_RANDOM", "true")
+NS_RANDOM = os.environ.get("NS_RANDOM", "false")
 NS_COOKIE = os.environ.get("NS_COOKIE", "")
 COOKIE = os.environ.get("COOKIE", "")
 COOKIE_ENV = NS_COOKIE or COOKIE
@@ -38,25 +38,6 @@ def pushplus_ts(token, rw, msg):
     print(f'pushplus推送结果：{msg}\n')
 
 
-def load_send():
-    global send
-    global hadsend
-    cur_path = os.path.abspath(os.path.dirname(__file__))
-    sys.path.append(cur_path)
-    if os.path.exists(cur_path + "/notify.py"):
-        try:
-            from notify import send
-            hadsend = True
-        except:
-            print("加载notify.py的通知服务失败，请检查~")
-            hadsend = False
-    else:
-        print("加载通知服务失败,缺少notify.py文件")
-        hadsend = False
-
-
-# load_send()
-
 if COOKIE_ENV:
     url = f"https://www.nodeseek.com/api/attendance?random={NS_RANDOM}"
     headers = {
@@ -86,7 +67,6 @@ if COOKIE_ENV:
         print(COOKIE_ENV)
         message = response_data.get('message')
         success = response_data.get('success')
-        send("nodeseek签到", message)
         if success == "true":
             print(message)
             if telegram_bot_token and chat_id:
